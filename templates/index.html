@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Message Detection - Smart Email Security</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 8l9-5 9 5v8a9 9 0 0 1-9 9 9 9 0 0 1-9-9V8z"></path>
+                </svg>
+                <span>SpamGuard</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link active">Dashboard</a></li>
+                <li><a href="#check-message" class="nav-link">Check Message</a></li>
+                <li><a href="#gmail" class="nav-link">Gmail Tools</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Dashboard Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Fake Message Detection</h1>
+            <p class="hero-subtitle">Advanced AI-powered spam and phishing detection for your emails</p>
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Total Messages</div>
+                        <div class="stat-value" id="stat-total">0</div>
+                    </div>
+                </div>
+                <div class="stat-card fake">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Fake Messages</div>
+                        <div class="stat-value" id="stat-fake">0</div>
+                    </div>
+                </div>
+                <div class="stat-card real">
+                    <div class="stat-icon">✓</div>
+                    <div class="stat-info">
+                        <div class="stat-label">Real Messages</div>
+                        <div class="stat-value" id="stat-real">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Check Single Message Section -->
+    <section id="check-message" class="container">
+        <div class="section-header">
+            <h2>Check a Message</h2>
+            <p>Paste any message to check if it's fake or real</p>
+        </div>
+
+        <div class="card form-card">
+            <form id="messageForm" class="message-form">
+                <div class="form-group">
+                    <label for="message">Enter Your Message</label>
+                    <textarea 
+                        id="message" 
+                        name="message" 
+                        placeholder="Paste the message you want to check here... (email subject, content, SMS, etc.)"
+                        required
+                        rows="6"
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
+                    </svg>
+                    Analyze Message
+                </button>
+            </form>
+
+            <div id="resultContainer" class="result-container hidden">
+                <div id="resultContent" class="result-content"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gmail Integration Section -->
+    <section id="gmail" class="container">
+        <div class="section-header">
+            <h2>Gmail Integration</h2>
+            <p>Connect your Gmail account to scan and clean your inbox</p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="card" id="gmailLoginCard">
+            <div class="card-header">
+                <h3>🔐 Secure Gmail Login</h3>
+                <p>Use your Gmail address and an <strong>App Password</strong> (not your regular password)</p>
+            </div>
+
+            <form id="gmailLoginForm" class="message-form">
+                <div class="form-group">
+                    <label for="gmailEmail">Gmail Address</label>
+                    <input 
+                        type="email" 
+                        id="gmailEmail" 
+                        name="email" 
+                        placeholder="your.email@gmail.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="gmailPassword">App Password</label>
+                    <input 
+                        type="password" 
+                        id="gmailPassword" 
+                        name="password" 
+                        placeholder="Enter your Gmail App Password"
+                        required
+                    >
+                    <small>
+                        <a href="https://myaccount.google.com/apppasswords" target="_blank">
+                            How to get App Password?
+                        </a>
+                    </small>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M15 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9"></path>
+                        <polyline points="17 3 23 3 23 9"></polyline>
+                        <line x1="23" y1="3" x2="13" y2="13"></line>
+                    </svg>
+                    Connect Gmail
+                </button>
+            </form>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="gmailDashboard" class="card hidden">
+            <div class="card-header">
+                <h3>📬 Inbox Analysis</h3>
+                <button id="disconnectBtn" class="btn btn-secondary btn-small">Disconnect</button>
+            </div>
+
+            <div class="gmail-controls">
+                <button id="scanBtn" class="btn btn-primary">
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    Scan Inbox
+                </button>
+
+                <button id="deleteBtn" class="btn btn-danger" disabled>
+                    <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Delete Fake Messages
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div id="progressContainer" class="progress-container hidden">
+                <div class="progress-info">
+                    <span id="progressLabel">Scanning emails...</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </div>
+
+            <!-- Messages List -->
+            <div id="messagesList" class="messages-list"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 SpamGuard. Protecting your inbox with AI.</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
